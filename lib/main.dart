@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:whicle_app/screens/favorite_screen.dart';
+import 'package:whicle_app/screens/form_cat.dart';
 import './screens/categoryItems.dart';
 import './screens/provider.dart';
 import './screens/dashboard.dart';
@@ -27,6 +29,8 @@ class MainApp extends StatelessWidget {
         '/category-items': (ctx) => CategoryItems(),
         '/settings': (ctx) => Settings(),
         '/item-details': (ctx) => VehicleScreen(),
+        '/favorite-page': (ctx) => FavoriteScreen(),
+        '/cat-form': (ctx) => CategoryForm(),
       },
     );
   }

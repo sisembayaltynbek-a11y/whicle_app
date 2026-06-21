@@ -8,6 +8,7 @@ class VehicleScreen extends StatelessWidget {
     final routeArgs =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
         {};
+    final String id = routeArgs['id'];
     final String name = routeArgs['name'] ?? '';
     final String brand = routeArgs['brand'] ?? '';
     final String imageUrl = routeArgs['imageUrl'] ?? '';
@@ -17,6 +18,8 @@ class VehicleScreen extends StatelessWidget {
     final String engineType = routeArgs['engineType'] ?? '';
     final int horsepower = int.tryParse(routeArgs['horsepower'] ?? '0') ?? 0;
     final String fuelType = routeArgs['fuelType'] ?? '';
+    VoidCallback toggleFavorite = routeArgs['toggleFavorite'];
+    final Set<String> listofFavs = routeArgs['listofFavs'];
 
     void purchase() {
       // Implement purchase logic here
@@ -76,9 +79,22 @@ class VehicleScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: purchase,
-                    child: const Text("Purchase"),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: purchase,
+                        child: const Text("Purchase"),
+                      ),
+                      IconButton(
+                        onPressed: toggleFavorite,
+                        icon: Icon(
+                          listofFavs.contains(id)
+                              ? Icons.favorite
+                              : Icons.favorite_border_outlined,
+                          color: const Color.fromARGB(255, 255, 17, 0),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

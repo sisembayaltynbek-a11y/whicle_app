@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whicle_app/screens/favorite_screen.dart';
 import '../screens/categories.dart';
 import '../screens/dashboard.dart';
 import '../widgets/drawerWidget.dart';
@@ -14,8 +15,16 @@ class ProviderScreen extends StatefulWidget {
 
 class _ProviderScreenState extends State<ProviderScreen> {
   final String routeName = '/';
-  List<Widget> get _pages => [DashboardScreen(), CategoriesScreen()];
-  List<Widget> _appBar = [const Text('Dashboard'), const Text('Categories')];
+  List<Widget> get _pages => [
+    DashboardScreen(),
+    CategoriesScreen(),
+    FavoriteScreen(),
+  ];
+  List<Widget> _appBar = [
+    const Text('Dashboard'),
+    const Text('Categories'),
+    const Text("Favorites"),
+  ];
   int selectedIndex = 0;
   void onTabTapped(int index) {
     setState(() {
@@ -45,7 +54,18 @@ class _ProviderScreenState extends State<ProviderScreen> {
             icon: Icon(Icons.category),
             label: 'Categories',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/cat-form');
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.white,
       ),
     );
   }

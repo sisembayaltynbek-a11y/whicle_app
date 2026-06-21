@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import './snackBar.dart';
 
-class CarCard extends StatelessWidget {
+class CarCard extends StatefulWidget {
   final String id;
   final String name;
   final String brand;
@@ -27,6 +28,38 @@ class CarCard extends StatelessWidget {
     required this.horsepower,
     required this.fuelType,
   });
+  static Set<String> get favoriteIds => _CarCardState._favoriteIds;
+  @override
+  State<CarCard> createState() => _CarCardState();
+}
+
+class _CarCardState extends State<CarCard> {
+  static final Set<String> _favoriteIds = {};
+  static bool isFavorite(String id) {
+    return _favoriteIds.contains(id);
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      if (_favoriteIds.contains(widget.id)) {
+        _favoriteIds.remove(widget.id);
+
+        GlassSnackbar.show(
+          context,
+          message: "Removed from favorites",
+          icon: Icons.favorite_border,
+        );
+      } else {
+        _favoriteIds.add(widget.id);
+
+        GlassSnackbar.show(
+          context,
+          message: "You liked this product",
+          icon: Icons.favorite,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +68,19 @@ class CarCard extends StatelessWidget {
         context,
         "/item-details",
         arguments: {
-          'id': id,
-          'name': name,
-          'brand': brand,
-          'color': color.toString(),
-          'imageUrl': imageUrl,
-          'description': description,
-          'price': price.toString(),
-          'year': year.toString(),
-          'engineType': engineType,
-          'horsepower': horsepower.toString(),
-          'fuelType': fuelType,
+          'id': widget.id,
+          'name': widget.name,
+          'brand': widget.brand,
+          'color': widget.color.toString(),
+          'imageUrl': widget.imageUrl,
+          'description': widget.description,
+          'price': widget.price.toString(),
+          'year': widget.year.toString(),
+          'engineType': widget.engineType,
+          'horsepower': widget.horsepower.toString(),
+          'fuelType': widget.fuelType,
+          'toggleFavorite': _toggleFavorite,
+          'listofFavs': _favoriteIds,
         },
       );
     }
@@ -57,16 +92,33 @@ class CarCard extends StatelessWidget {
           child: Column(
             children: [
               Image.network(
-                imageUrl,
+                widget.imageUrl,
                 height: 145,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
               ListTile(
-                title: Text(name, style: const TextStyle(color: Colors.white)),
-                subtitle: Text(
-                  brand,
-                  style: const TextStyle(color: Colors.white70),
+                title: Text(
+                  widget.name,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.brand,
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    IconButton(
+                      onPressed: _toggleFavorite,
+                      icon: Icon(
+                        isFavorite(widget.id)
+                            ? Icons.favorite
+                            : Icons.favorite_border_outlined,
+                        color: const Color.fromARGB(255, 255, 17, 0),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -75,7 +127,7 @@ class CarCard extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 const Color.fromARGB(255, 123, 107, 230).withOpacity(0.4),
-                color,
+                widget.color,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
